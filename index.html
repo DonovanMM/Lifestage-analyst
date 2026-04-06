@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Lifestage Analyzer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<style>
+:root {
+  --bg:#ffffff;--bg2:#f8f8f8;--bg3:#f0f0f0;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+  --text:#111111;--text2:#555555;--text3:#999999;
+  --shadow:0 2px 12px rgba(0,0,0,0.06);--shadow2:0 4px 24px rgba(0,0,0,0.10);
+}
+.dark {
+  --bg:#111111;--bg2:#1a1a1a;--bg3:#222222;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#f0f0f0;--text2:#aaaaaa;--text3:#555555;
+  --shadow:0 2px 12px rgba(0,0,0,0.4);--shadow2:0 4px 24px rgba(0,0,0,0.6);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:24px;transition:background .3s,color .3s;}
+
+.topbar{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+.topbar h1{font-size:17px;font-weight:600;letter-spacing:-.02em;flex:1;}
+.topbar .vtag{font-size:12px;color:var(--text3);font-family:monospace;}
+.theme-btn{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:99px;padding:6px 14px 6px 8px;cursor:pointer;transition:all .2s;user-select:none;}
+.theme-btn:hover{border-color:var(--text3);}
+.track{width:30px;height:16px;background:var(--bg3);border-radius:99px;border:1px solid var(--border2);position:relative;}
+.thumb{width:10px;height:10px;border-radius:50%;background:var(--text3);position:absolute;top:2px;left:2px;transition:transform .25s cubic-bezier(.34,1.56,.64,1),background .2s;}
+.dark .thumb{transform:translateX(14px);background:var(--text);}
+.theme-lbl{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.06em;font-family:monospace;}
+
+#upload-section{max-width:520px;margin:0 auto;padding-top:40px;}
+.upload-area{border:1.5px dashed var(--border2);border-radius:16px;padding:56px 40px;text-align:center;background:var(--bg2);cursor:pointer;transition:all .2s;}
+.upload-area:hover,.upload-area.drag{border-color:var(--text);background:var(--bg3);}
+.upload-area p{color:var(--text2);font-size:13px;line-height:1.6;}
+.upload-area strong{color:var(--text);}
+#file-input{display:none;}
+
+#pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+.pill{border:1px solid;border-radius:99px;padding:4px 13px;cursor:pointer;font-size:12px;font-weight:500;transition:all .15s;white-space:nowrap;}
+
+.layout{display:grid;gap:16px;}
+.layout.with-panel{grid-template-columns:1fr 360px;}
+
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
+.card-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);}
+.card-head-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);}
+.card-hint{font-size:11px;color:var(--text3);font-family:monospace;}
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:11px;}
+thead tr{background:var(--bg3);}
+th{padding:8px 10px;white-space:nowrap;text-align:center;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border);}
+th.l{text-align:left;}
+tbody tr{cursor:pointer;transition:background .1s;border-bottom:1px solid var(--border);}
+tbody tr:last-child{border-bottom:none;}
+tbody tr.sel{background:var(--bg3) !important;}
+tbody tr:hover{background:var(--bg3);}
+td{padding:6px 10px;text-align:center;font-family:monospace;}
+td.l{text-align:left;font-family:inherit;}
+td.uid{color:var(--text);font-weight:500;text-align:left;font-family:monospace;}
+td.p{color:#16a34a;}td.f{color:#dc2626;}
+.dark td.p{color:#4ade80;}.dark td.f{color:#f87171;}
+.badge{border-radius:6px;padding:2px 9px;font-size:10px;font-weight:700;border:1px solid;font-family:monospace;letter-spacing:.02em;white-space:nowrap;}
+
+/* detail panel */
+#detail{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;align-self:start;position:sticky;top:16px;display:none;box-shadow:var(--shadow2);max-height:calc(100vh - 40px);overflow-y:auto;}
+#detail.visible{display:block;}
+.d-uid{font-size:15px;font-weight:600;font-family:monospace;margin-bottom:6px;}
+.d-stage{margin-bottom:10px;}
+.d-meta{font-size:11px;color:var(--text2);margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);line-height:1.8;}
+.sec-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
+.stage-block{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;}
+.stage-block.hit{background:rgba(22,163,74,.06);border-color:rgba(22,163,74,.25);}
+.dark .stage-block.hit{background:rgba(74,222,128,.06);border-color:rgba(74,222,128,.25);}
+.s-head{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.s-name{font-size:12px;font-weight:600;color:var(--text);}
+.cond{display:flex;align-items:center;gap:8px;margin-bottom:4px;font-size:11px;}
+.cond:last-child{margin-bottom:0;}
+.ci{width:16px;height:16px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;}
+.ci.p{background:rgba(22,163,74,.15);color:#16a34a;}
+.ci.f{background:rgba(220,38,38,.12);color:#dc2626;}
+.dark .ci.p{background:rgba(74,222,128,.15);color:#4ade80;}
+.dark .ci.f{background:rgba(248,113,113,.12);color:#f87171;}
+.cl{color:var(--text2);flex:1;font-family:monospace;font-size:10px;}
+.cv{font-weight:700;font-family:monospace;font-size:11px;}
+.cv.p{color:#16a34a;}.cv.f{color:#dc2626;}
+.dark .cv.p{color:#4ade80;}.dark .cv.f{color:#f87171;}
+.close-btn{float:right;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:6px;padding:3px 9px;cursor:pointer;font-size:11px;margin-top:2px;}
+.close-btn:hover{color:var(--text);}
+
+#reset-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:8px;padding:5px 13px;cursor:pointer;font-size:12px;transition:all .15s;}
+#reset-btn:hover{color:var(--text);border-color:var(--text3);}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div style="width:28px;height:28px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;">🔍</div>
+  <h1>Lifestage Analyzer</h1>
+  <span class="vtag">v2.1</span>
+  <div class="theme-btn" onclick="toggleTheme()">
+    <div class="track"><div class="thumb"></div></div>
+    <span class="theme-lbl" id="theme-lbl">LIGHT</span>
+  </div>
+</div>
+
+<div id="upload-section">
+  <div class="upload-area" id="upload-area">
+    <div style="font-size:32px;margin-bottom:12px;">📂</div>
+    <p><strong>Drop your CSV here</strong><br>or click to browse</p>
+    <input type="file" id="file-input" accept=".csv">
+  </div>
+</div>
+
+<div id="app-section" style="display:none;">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <span style="font-size:15px;font-weight:600;">Lifestage Analyzer</span>
+    <button id="reset-btn">↩ New file</button>
+  </div>
+
+  <div style="position:relative;margin-bottom:10px;">
+    <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;opacity:.4;pointer-events:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input id="search" type="text" placeholder="Search user ID…" oninput="onSearch()" style="width:100%;padding:9px 36px 9px 34px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-size:13px;font-family:monospace;outline:none;transition:border-color .2s;">
+    <button id="search-clear" onclick="clearSearch()" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);background:var(--bg3);border:1px solid var(--border);border-radius:99px;color:var(--text2);font-size:11px;padding:2px 8px;cursor:pointer;">✕</button>
+  </div>
+
+  <div id="pills" style="margin-bottom:16px;"></div>
+
+  <div class="layout" id="layout">
+    <div class="card">
+      <div class="card-head">
+        <span class="card-head-label">Users</span>
+        <span class="card-hint" id="table-hint"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th class="l">user_id</th><th>age</th>
+            <th>apds 90d</th><th>apds 90-180</th><th>apds 180+</th>
+            <th>dep 90d</th><th>dep 90-180</th><th>dep 180+</th>
+            <th>tot apds</th><th>tot deps</th>
+            <th class="l">stage</th>
+          </tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div id="pagination"></div>
+    </div>
+    <div id="detail"></div>
+  </div>
+</div>
+
+<script>
+var COLORS={
+  "In Life":"#16a34a","In Life Lapsed":"#65a30d","Lost":"#dc2626",
+  "Early Life":"#2563eb","Early Life Lapsed":"#d97706",
+  "Early Life Lost":"#ea580c","Archive":"#6b7280"
+};
+
+function toggleTheme(){
+  var d=document.body.classList.toggle('dark');
+  document.getElementById('theme-lbl').textContent=d?'DARK':'LIGHT';
+}
+
+function classify(u){
+  if(u.apds_last_90d>=2&&u.deposits_last_90d>=2) return "In Life";
+  if(u.apds_90_180d>=2&&u.deposits_90_180d>=2&&u.apds_last_90d<2) return "In Life Lapsed";
+  if(u.apds_180d_plus>=2&&u.deposits_180d_plus>=2) return "Lost";
+  if(u.account_age_days<=30&&u.apds_first_30d<2&&u.deposits_first_30d<2) return "Early Life";
+  if(u.account_age_days>=31&&u.account_age_days<=90&&!(u.apds_first_90d>=2&&u.deposits_first_90d>=2)) return "Early Life Lapsed";
+  if(u.account_age_days>90&&!(u.total_apds_lifetime>=2&&u.total_deposits_lifetime>=2)) return "Early Life Lost";
+  return "Archive";
+}
+
+function getChecks(u){
+  return [
+    {stage:"In Life",hit:u.apds_last_90d>=2&&u.deposits_last_90d>=2,conds:[
+      {lbl:"apds_last_90d >= 2",pass:u.apds_last_90d>=2,val:u.apds_last_90d},
+      {lbl:"deposits_last_90d >= 2",pass:u.deposits_last_90d>=2,val:u.deposits_last_90d}
+    ]},
+    {stage:"In Life Lapsed",hit:u.apds_90_180d>=2&&u.deposits_90_180d>=2&&u.apds_last_90d<2,conds:[
+      {lbl:"apds_90_180d >= 2",pass:u.apds_90_180d>=2,val:u.apds_90_180d},
+      {lbl:"deposits_90_180d >= 2",pass:u.deposits_90_180d>=2,val:u.deposits_90_180d},
+      {lbl:"apds_last_90d < 2",pass:u.apds_last_90d<2,val:u.apds_last_90d}
+    ]},
+    {stage:"Lost",hit:u.apds_180d_plus>=2&&u.deposits_180d_plus>=2,conds:[
+      {lbl:"apds_180d_plus >= 2",pass:u.apds_180d_plus>=2,val:u.apds_180d_plus},
+      {lbl:"deposits_180d_plus >= 2",pass:u.deposits_180d_plus>=2,val:u.deposits_180d_plus}
+    ]},
+    {stage:"Early Life",hit:u.account_age_days<=30&&u.apds_first_30d<2&&u.deposits_first_30d<2,conds:[
+      {lbl:"account_age_days <= 30",pass:u.account_age_days<=30,val:u.account_age_days},
+      {lbl:"apds_first_30d < 2",pass:u.apds_first_30d<2,val:u.apds_first_30d},
+      {lbl:"deposits_first_30d < 2",pass:u.deposits_first_30d<2,val:u.deposits_first_30d}
+    ]},
+    {stage:"Early Life Lapsed",hit:u.account_age_days>=31&&u.account_age_days<=90&&!(u.apds_first_90d>=2&&u.deposits_first_90d>=2),conds:[
+      {lbl:"account_age_days 31–90",pass:u.account_age_days>=31&&u.account_age_days<=90,val:u.account_age_days},
+      {lbl:"NOT (apds_first_90d>=2 AND deposits_first_90d>=2)",pass:!(u.apds_first_90d>=2&&u.deposits_first_90d>=2),val:"apds="+u.apds_first_90d+", deps="+u.deposits_first_90d}
+    ]},
+    {stage:"Early Life Lost",hit:u.account_age_days>90&&!(u.total_apds_lifetime>=2&&u.total_deposits_lifetime>=2),conds:[
+      {lbl:"account_age_days > 90",pass:u.account_age_days>90,val:u.account_age_days},
+      {lbl:"NOT (total_apds>=2 AND total_deps>=2)",pass:!(u.total_apds_lifetime>=2&&u.total_deposits_lifetime>=2),val:"apds="+u.total_apds_lifetime+", deps="+u.total_deposits_lifetime}
+    ]}
+  ];
+}
+
+function mkBadge(stage){
+  var c=COLORS[stage]||"#6b7280";
+  return '<span class="badge" style="color:'+c+';border-color:'+c+'33;background:'+c+'15">'+stage+'</span>';
+}
+
+var allData=[], currentFilter="all", selectedId=null, searchQuery="", currentPage=1, PAGE=100;
+
+function getFiltered(){
+  var f=currentFilter==="all"?allData:allData.filter(function(u){return u.life_stage===currentFilter;});
+  if(searchQuery) f=f.filter(function(u){return String(u.user_id).toLowerCase().includes(searchQuery);});
+  return f;
+}
+
+function renderPills(){
+  var dist={};
+  allData.forEach(function(u){dist[u.life_stage]=(dist[u.life_stage]||0)+1;});
+  var html="";
+  Object.keys(dist).sort(function(a,b){return dist[b]-dist[a];}).forEach(function(s){
+    var c=COLORS[s]||"#6b7280",n=dist[s],active=currentFilter===s;
+    html+='<div class="pill" data-stage="'+s+'" style="border-color:'+c+';color:'+(active?"#fff":c)+';background:'+(active?c:c+"15")+'">'+s+' <strong>'+n+'</strong></div>';
+  });
+  var allA=currentFilter==="all";
+  html+='<div class="pill" data-stage="all" style="border-color:var(--border2);color:var(--text2);background:'+(allA?"var(--bg3)":"transparent")+'">All '+allData.length+'</div>';
+  var el=document.getElementById("pills");
+  el.innerHTML=html;
+  el.querySelectorAll(".pill").forEach(function(p){
+    p.addEventListener("click",function(){currentFilter=p.dataset.stage;currentPage=1;selectedId=null;renderAll();});
+  });
+}
+
+function paginate(cur,tot){
+  if(tot<=7){var a=[];for(var i=1;i<=tot;i++)a.push(i);return a;}
+  var p=[1];
+  if(cur>3)p.push('…');
+  for(var i=Math.max(2,cur-1);i<=Math.min(tot-1,cur+1);i++)p.push(i);
+  if(cur<tot-2)p.push('…');
+  p.push(tot);
+  return p;
+}
+function goPage(p){currentPage=p;renderTable();}
+
+function renderTable(){
+  var filtered=getFiltered();
+  if(searchQuery&&filtered.length===1){selectedId=String(filtered[0].user_id);}
+  var tot=Math.max(1,Math.ceil(filtered.length/PAGE));
+  if(currentPage>tot)currentPage=tot;
+  var start=(currentPage-1)*PAGE;
+  var page=filtered.slice(start,start+PAGE);
+  document.getElementById("table-hint").textContent=(start+1)+"–"+Math.min(start+PAGE,filtered.length)+" of "+filtered.length+" users";
+
+  var html="";
+  page.forEach(function(u){
+    var sid=String(u.user_id);
+    var sel=sid===selectedId?"sel":"";
+    html+='<tr class="'+sel+'" data-uid="'+sid+'">'+
+      '<td class="uid">'+u.user_id+'</td>'+
+      '<td>'+u.account_age_days+'</td>'+
+      '<td class="'+(u.apds_last_90d>=2?"p":"f")+'">'+u.apds_last_90d+'</td>'+
+      '<td class="'+(u.apds_90_180d>=2?"p":"f")+'">'+u.apds_90_180d+'</td>'+
+      '<td class="'+(u.apds_180d_plus>=2?"p":"f")+'">'+u.apds_180d_plus+'</td>'+
+      '<td class="'+(u.deposits_last_90d>=2?"p":"f")+'">'+u.deposits_last_90d+'</td>'+
+      '<td class="'+(u.deposits_90_180d>=2?"p":"f")+'">'+u.deposits_90_180d+'</td>'+
+      '<td class="'+(u.deposits_180d_plus>=2?"p":"f")+'">'+u.deposits_180d_plus+'</td>'+
+      '<td class="'+(u.total_apds_lifetime>=2?"p":"f")+'">'+u.total_apds_lifetime+'</td>'+
+      '<td class="'+(u.total_deposits_lifetime>=2?"p":"f")+'">'+u.total_deposits_lifetime+'</td>'+
+      '<td class="l">'+mkBadge(u.life_stage)+'</td></tr>';
+  });
+
+  var tbody=document.getElementById("tbody");
+  tbody.innerHTML=html;
+  tbody.querySelectorAll("tr").forEach(function(row){
+    row.addEventListener("click",function(){
+      var uid=row.dataset.uid;
+      selectedId=(selectedId===uid)?null:uid;
+      renderTable();
+      renderDetail();
+    });
+  });
+
+  var pgEl=document.getElementById("pagination");
+  if(tot<=1){pgEl.innerHTML="";return;}
+  var ph='<div style="display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-top:1px solid var(--border);">';
+  ph+='<button onclick="goPage('+Math.max(1,currentPage-1)+')" '+(currentPage===1?"disabled":"")+' style="padding:5px 12px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:12px;cursor:'+(currentPage===1?"default":"pointer")+';opacity:'+(currentPage===1?.4:1)+'">← Prev</button>';
+  paginate(currentPage,tot).forEach(function(p){
+    if(p==='…'){ph+='<span style="color:var(--text3);font-size:12px;padding:0 4px">…</span>';}
+    else{ph+='<button onclick="goPage('+p+')" style="padding:5px 11px;border-radius:8px;border:1px solid '+(p===currentPage?"var(--text)":"var(--border2)")+';background:'+(p===currentPage?"var(--text)":"var(--bg3)")+';color:'+(p===currentPage?"var(--bg)":"var(--text2)")+';font-size:12px;cursor:pointer;font-weight:'+(p===currentPage?600:400)+'">'+p+'</button>';}
+  });
+  ph+='<button onclick="goPage('+Math.min(tot,currentPage+1)+')" '+(currentPage===tot?"disabled":"")+' style="padding:5px 12px;border-radius:8px;border:1px solid var(--border2);background:var(--bg3);color:var(--text2);font-size:12px;cursor:'+(currentPage===tot?"default":"pointer")+';opacity:'+(currentPage===tot?.4:1)+'">Next →</button>';
+  ph+='<span style="font-size:11px;color:var(--text3);margin-left:8px;font-family:monospace">Page '+currentPage+' / '+tot+'</span></div>';
+  pgEl.innerHTML=ph;
+}
+
+function renderDetail(){
+  var panel=document.getElementById("detail");
+  var layout=document.getElementById("layout");
+  if(!selectedId){panel.classList.remove("visible");panel.style.display="none";layout.classList.remove("with-panel");return;}
+
+  var u=null;
+  for(var i=0;i<allData.length;i++){if(String(allData[i].user_id)===selectedId){u=allData[i];break;}}
+  if(!u){panel.classList.remove("visible");panel.style.display="none";layout.classList.remove("with-panel");return;}
+
+  panel.style.display="block";
+  panel.classList.add("visible");
+  layout.classList.add("with-panel");
+
+  var checks=getChecks(u);
+  var html='<button class="close-btn" onclick="closeDetail()">✕ close</button>'+
+    '<div class="d-uid">'+u.user_id+'</div>'+
+    '<div class="d-stage">'+mkBadge(u.life_stage)+'</div>'+
+    '<div class="d-meta">Account age: <strong>'+u.account_age_days+' days</strong>'+(u.account_open_date?'<br>Opened: '+u.account_open_date:'')+'</div>'+
+    '<div class="sec-lbl">Stage conditions</div>';
+
+  checks.forEach(function(item){
+    html+='<div class="stage-block'+(item.hit?" hit":"")+'">'+
+      '<div class="s-head">'+
+        '<span style="font-size:13px">'+(item.hit?"✅":"❌")+'</span>'+
+        '<span class="s-name">'+item.stage+'</span>'+
+        (item.hit?'<span style="margin-left:auto;font-size:10px;color:#16a34a;font-weight:700;">MATCHED</span>':'')+
+      '</div>';
+    item.conds.forEach(function(c){
+      html+='<div class="cond">'+
+        '<div class="ci '+(c.pass?"p":"f")+'">'+(c.pass?"✓":"✗")+'</div>'+
+        '<span class="cl">'+c.lbl+'</span>'+
+        '<span class="cv '+(c.pass?"p":"f")+'">'+c.val+'</span>'+
+      '</div>';
+    });
+    html+='</div>';
+  });
+
+  panel.innerHTML=html;
+}
+
+function closeDetail(){
+  selectedId=null;
+  renderTable();
+  renderDetail();
+}
+
+function renderAll(){renderPills();renderTable();renderDetail();}
+
+function onSearch(){
+  searchQuery=document.getElementById("search").value.trim().toLowerCase();
+  document.getElementById("search-clear").style.display=searchQuery?"block":"none";
+  if(searchQuery){currentFilter="all";}
+  selectedId=null;currentPage=1;
+  renderAll();
+}
+function clearSearch(){
+  document.getElementById("search").value="";
+  searchQuery="";
+  document.getElementById("search-clear").style.display="none";
+  selectedId=null;currentPage=1;
+  renderAll();
+}
+
+function loadFile(file){
+  Papa.parse(file,{header:true,dynamicTyping:true,skipEmptyLines:true,complete:function(r){
+    allData=r.data.map(function(row){
+      if(!row.life_stage) row.life_stage=classify(row);
+      return row;
+    });
+    currentFilter="all";selectedId=null;currentPage=1;
+    document.getElementById("upload-section").style.display="none";
+    document.getElementById("app-section").style.display="block";
+    renderAll();
+  }});
+}
+
+var area=document.getElementById("upload-area");
+var inp=document.getElementById("file-input");
+area.addEventListener("click",function(){inp.click();});
+inp.addEventListener("change",function(e){if(e.target.files[0])loadFile(e.target.files[0]);});
+area.addEventListener("dragover",function(e){e.preventDefault();area.classList.add("drag");});
+area.addEventListener("dragleave",function(){area.classList.remove("drag");});
+area.addEventListener("drop",function(e){e.preventDefault();area.classList.remove("drag");if(e.dataTransfer.files[0])loadFile(e.dataTransfer.files[0]);});
+document.getElementById("reset-btn").addEventListener("click",function(){
+  allData=[];selectedId=null;searchQuery="";currentPage=1;
+  document.getElementById("search").value="";
+  document.getElementById("upload-section").style.display="block";
+  document.getElementById("app-section").style.display="none";
+  document.getElementById("detail").classList.remove("visible");
+  document.getElementById("layout").classList.remove("with-panel");
+});
+</script>
+</body>
+</html>
