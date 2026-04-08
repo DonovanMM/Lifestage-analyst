@@ -19,30 +19,25 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:24px;transition:background .3s,color .3s;}
-
 .topbar{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
 .topbar h1{font-size:17px;font-weight:600;letter-spacing:-.02em;flex:1;}
-.topbar .vtag{font-size:12px;color:var(--text3);font-family:monospace;}
+.vtag{font-size:12px;color:var(--text3);font-family:monospace;}
 .theme-btn{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border2);border-radius:99px;padding:6px 14px 6px 8px;cursor:pointer;transition:all .2s;user-select:none;}
 .theme-btn:hover{border-color:var(--text3);}
 .track{width:30px;height:16px;background:var(--bg3);border-radius:99px;border:1px solid var(--border2);position:relative;}
 .thumb{width:10px;height:10px;border-radius:50%;background:var(--text3);position:absolute;top:2px;left:2px;transition:transform .25s cubic-bezier(.34,1.56,.64,1),background .2s;}
 .dark .thumb{transform:translateX(14px);background:var(--text);}
 .theme-lbl{font-size:11px;font-weight:600;color:var(--text2);letter-spacing:.06em;font-family:monospace;}
-
 #upload-section{max-width:520px;margin:0 auto;padding-top:40px;}
 .upload-area{border:1.5px dashed var(--border2);border-radius:16px;padding:56px 40px;text-align:center;background:var(--bg2);cursor:pointer;transition:all .2s;}
 .upload-area:hover,.upload-area.drag{border-color:var(--text);background:var(--bg3);}
 .upload-area p{color:var(--text2);font-size:13px;line-height:1.6;}
 .upload-area strong{color:var(--text);}
 #file-input{display:none;}
-
 #pills{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
 .pill{border:1px solid;border-radius:99px;padding:4px 13px;cursor:pointer;font-size:12px;font-weight:500;transition:all .15s;white-space:nowrap;}
-
 .layout{display:grid;gap:16px;}
-.layout.with-panel{grid-template-columns:1fr 360px;}
-
+.layout.with-panel{grid-template-columns:1fr 400px;}
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:var(--shadow);}
 .card-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border);}
 .card-head-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);}
@@ -62,13 +57,12 @@ td.uid{color:var(--text);font-weight:500;text-align:left;font-family:monospace;}
 td.p{color:#16a34a;}td.f{color:#dc2626;}
 .dark td.p{color:#4ade80;}.dark td.f{color:#f87171;}
 .badge{border-radius:6px;padding:2px 9px;font-size:10px;font-weight:700;border:1px solid;font-family:monospace;letter-spacing:.02em;white-space:nowrap;}
-
-/* detail panel */
 #detail{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:20px;align-self:start;position:sticky;top:16px;display:none;box-shadow:var(--shadow2);max-height:calc(100vh - 40px);overflow-y:auto;}
 #detail.visible{display:block;}
 .d-uid{font-size:15px;font-weight:600;font-family:monospace;margin-bottom:6px;}
 .d-stage{margin-bottom:10px;}
-.d-meta{font-size:11px;color:var(--text2);margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);line-height:1.8;}
+.d-meta{font-size:11px;color:var(--text2);margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border);line-height:1.9;}
+.d-meta strong{color:var(--text);}
 .sec-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);margin-bottom:10px;}
 .stage-block{background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px 12px;margin-bottom:8px;}
 .stage-block.hit{background:rgba(22,163,74,.06);border-color:rgba(22,163,74,.25);}
@@ -82,13 +76,12 @@ td.p{color:#16a34a;}td.f{color:#dc2626;}
 .ci.f{background:rgba(220,38,38,.12);color:#dc2626;}
 .dark .ci.p{background:rgba(74,222,128,.15);color:#4ade80;}
 .dark .ci.f{background:rgba(248,113,113,.12);color:#f87171;}
-.cl{color:var(--text2);flex:1;font-family:monospace;font-size:10px;}
-.cv{font-weight:700;font-family:monospace;font-size:11px;}
+.cl{color:var(--text2);flex:1;font-family:monospace;font-size:10px;line-height:1.4;}
+.cv{font-weight:700;font-family:monospace;font-size:11px;white-space:nowrap;}
 .cv.p{color:#16a34a;}.cv.f{color:#dc2626;}
 .dark .cv.p{color:#4ade80;}.dark .cv.f{color:#f87171;}
 .close-btn{float:right;background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:6px;padding:3px 9px;cursor:pointer;font-size:11px;margin-top:2px;}
 .close-btn:hover{color:var(--text);}
-
 #reset-btn{background:var(--bg3);border:1px solid var(--border2);color:var(--text2);border-radius:8px;padding:5px 13px;cursor:pointer;font-size:12px;transition:all .15s;}
 #reset-btn:hover{color:var(--text);border-color:var(--text3);}
 </style>
@@ -98,7 +91,7 @@ td.p{color:#16a34a;}td.f{color:#dc2626;}
 <div class="topbar">
   <div style="width:28px;height:28px;border-radius:8px;background:var(--bg3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;">🔍</div>
   <h1>Lifestage Analyzer</h1>
-  <span class="vtag">v2.1</span>
+  <span class="vtag">v4.1</span>
   <div class="theme-btn" onclick="toggleTheme()">
     <div class="track"><div class="thumb"></div></div>
     <span class="theme-lbl" id="theme-lbl">LIGHT</span>
@@ -118,15 +111,12 @@ td.p{color:#16a34a;}td.f{color:#dc2626;}
     <span style="font-size:15px;font-weight:600;">Lifestage Analyzer</span>
     <button id="reset-btn">↩ New file</button>
   </div>
-
   <div style="position:relative;margin-bottom:10px;">
     <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;opacity:.4;pointer-events:none" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
     <input id="search" type="text" placeholder="Search user ID…" oninput="onSearch()" style="width:100%;padding:9px 36px 9px 34px;background:var(--bg2);border:1px solid var(--border2);border-radius:10px;color:var(--text);font-size:13px;font-family:monospace;outline:none;transition:border-color .2s;">
     <button id="search-clear" onclick="clearSearch()" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);background:var(--bg3);border:1px solid var(--border);border-radius:99px;color:var(--text2);font-size:11px;padding:2px 8px;cursor:pointer;">✕</button>
   </div>
-
   <div id="pills" style="margin-bottom:16px;"></div>
-
   <div class="layout" id="layout">
     <div class="card">
       <div class="card-head">
@@ -136,10 +126,21 @@ td.p{color:#16a34a;}td.f{color:#dc2626;}
       <div class="table-wrap">
         <table>
           <thead><tr>
-            <th class="l">user_id</th><th>age</th>
-            <th>apds 90d</th><th>apds 90-180</th><th>apds 180+</th>
-            <th>dep 90d</th><th>dep 90-180</th><th>dep 180+</th>
-            <th>tot apds</th><th>tot deps</th>
+            <th class="l">user_id</th>
+            <th>age days</th>
+            <th>tot apds</th>
+            <th>apds 90d</th>
+            <th>apds 90-180</th>
+            <th>apds 180+</th>
+            <th>apds 1st30</th>
+            <th>apds 1st90</th>
+            <th>tot deps</th>
+            <th>deps 90d</th>
+            <th>deps 90-180</th>
+            <th>deps 180+</th>
+            <th>deps 1st30</th>
+            <th>deps 1st90</th>
+            <th>last apd</th>
             <th class="l">stage</th>
           </tr></thead>
           <tbody id="tbody"></tbody>
@@ -152,81 +153,163 @@ td.p{color:#16a34a;}td.f{color:#dc2626;}
 </div>
 
 <script>
-var COLORS={
-  "In Life":"#16a34a","In Life Lapsed":"#65a30d","Lost":"#dc2626",
-  "Early Life":"#2563eb","Early Life Lapsed":"#d97706",
-  "Early Life Lost":"#ea580c","Archive":"#6b7280"
+var COLORS = {
+  "Early Life":        "#2563eb",
+  "In Life":           "#16a34a",
+  "Reactivated":       "#0891b2",
+  "In Life Lapsed":    "#65a30d",
+  "Lost":              "#dc2626",
+  "Early Life Lapsed": "#d97706",
+  "Early Life Lost":   "#ea580c",
+  "unknown":           "#6b7280"
 };
 
+var TODAY = new Date();
+TODAY.setHours(0,0,0,0);
+
+function daysAgo(n) {
+  var d = new Date(TODAY);
+  d.setDate(d.getDate() - n);
+  return d;
+}
+
+function parseDate(val) {
+  if (!val || val === '' || val === 'null' || val === 'None') return null;
+  var d = new Date(val);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function daysBetween(d1, d2) {
+  return Math.floor((d2 - d1) / 86400000);
+}
+
 function toggleTheme(){
-  var d=document.body.classList.toggle('dark');
-  document.getElementById('theme-lbl').textContent=d?'DARK':'LIGHT';
+  var d = document.body.classList.toggle('dark');
+  document.getElementById('theme-lbl').textContent = d ? 'DARK' : 'LIGHT';
 }
 
-function classify(u){
-  if(u.apds_last_90d>=2&&u.deposits_last_90d>=2) return "In Life";
-  if(u.apds_90_180d>=2&&u.deposits_90_180d>=2&&u.apds_last_90d<2) return "In Life Lapsed";
-  if(u.apds_180d_plus>=2&&u.deposits_180d_plus>=2) return "Lost";
-  if(u.account_age_days<=30&&u.apds_first_30d<2&&u.deposits_first_30d<2) return "Early Life";
-  if(u.account_age_days>=31&&u.account_age_days<=90&&!(u.apds_first_90d>=2&&u.deposits_first_90d>=2)) return "Early Life Lapsed";
-  if(u.account_age_days>90&&!(u.total_apds_lifetime>=2&&u.total_deposits_lifetime>=2)) return "Early Life Lost";
-  return "Archive";
+/* ── CLASSIFY — mirrors the SQL CASE exactly ── */
+function classify(u) {
+  var age       = +(u.account_age_days       || 0);
+  var tot_apds  = +(u.total_apds_lifetime    || 0);
+  var tot_deps  = +(u.total_deposits_lifetime|| 0);
+  var apds_f30  = +(u.apds_first_30d         || 0);
+  var deps_f30  = +(u.deposits_first_30d     || 0);
+  var lastApd   = parseDate(u.last_apd_date);
+
+  var lastApd30  = lastApd && lastApd >= daysAgo(30);
+  var lastApd30_180 = lastApd && lastApd < daysAgo(30) && lastApd >= daysAgo(180);
+  var lastApd180 = lastApd && lastApd < daysAgo(180);
+  var lastApdNull = !lastApd;
+
+  // 1. Early Life
+  if (tot_apds < 2 && tot_deps < 2 && age <= 30) return "Early Life";
+  // 2. In Life
+  if (tot_apds >= 2 && tot_deps >= 2 && lastApd30) return "In Life";
+  // 3. Reactivated
+  if ((tot_apds < 2 || tot_deps < 2) && age > 30 && lastApd30) return "Reactivated";
+  // 4. In Life Lapsed
+  if (tot_apds >= 2 && tot_deps >= 2 && lastApd30_180) return "In Life Lapsed";
+  // 5. Lost
+  if (tot_apds >= 2 && tot_deps >= 2 && lastApd180) return "Lost";
+  // 6. Early Life Lost
+  if ((tot_apds < 2 || tot_deps < 2) && (age > 90 || (lastApd && lastApd < daysAgo(90)) || lastApdNull && age > 90)) return "Early Life Lost";
+  // 7. Early Life Lapsed
+  if ((tot_apds < 2 || tot_deps < 2) && (age > 30 || (lastApd && lastApd < daysAgo(30)))) return "Early Life Lapsed";
+  return "unknown";
 }
 
-function getChecks(u){
+/* ── CHECKS for detail panel ── */
+function getChecks(u) {
+  var age      = +(u.account_age_days        || 0);
+  var tot_apds = +(u.total_apds_lifetime     || 0);
+  var tot_deps = +(u.total_deposits_lifetime || 0);
+  var lastApd  = parseDate(u.last_apd_date);
+
+  var la30     = !!(lastApd && lastApd >= daysAgo(30));
+  var la30_180 = !!(lastApd && lastApd < daysAgo(30) && lastApd >= daysAgo(180));
+  var la180    = !!(lastApd && lastApd < daysAgo(180));
+  var la90     = !lastApd || lastApd < daysAgo(90);
+  var la30x    = !lastApd || lastApd < daysAgo(30);
+  var lowApdOrDep = tot_apds < 2 || tot_deps < 2;
+  var highApdAndDep = tot_apds >= 2 && tot_deps >= 2;
+  var laStr    = lastApd ? String(u.last_apd_date).substring(0,10) : 'null';
+
   return [
-    {stage:"In Life",hit:u.apds_last_90d>=2&&u.deposits_last_90d>=2,conds:[
-      {lbl:"apds_last_90d >= 2",pass:u.apds_last_90d>=2,val:u.apds_last_90d},
-      {lbl:"deposits_last_90d >= 2",pass:u.deposits_last_90d>=2,val:u.deposits_last_90d}
-    ]},
-    {stage:"In Life Lapsed",hit:u.apds_90_180d>=2&&u.deposits_90_180d>=2&&u.apds_last_90d<2,conds:[
-      {lbl:"apds_90_180d >= 2",pass:u.apds_90_180d>=2,val:u.apds_90_180d},
-      {lbl:"deposits_90_180d >= 2",pass:u.deposits_90_180d>=2,val:u.deposits_90_180d},
-      {lbl:"apds_last_90d < 2",pass:u.apds_last_90d<2,val:u.apds_last_90d}
-    ]},
-    {stage:"Lost",hit:u.apds_180d_plus>=2&&u.deposits_180d_plus>=2,conds:[
-      {lbl:"apds_180d_plus >= 2",pass:u.apds_180d_plus>=2,val:u.apds_180d_plus},
-      {lbl:"deposits_180d_plus >= 2",pass:u.deposits_180d_plus>=2,val:u.deposits_180d_plus}
-    ]},
-    {stage:"Early Life",hit:u.account_age_days<=30&&u.apds_first_30d<2&&u.deposits_first_30d<2,conds:[
-      {lbl:"account_age_days <= 30",pass:u.account_age_days<=30,val:u.account_age_days},
-      {lbl:"apds_first_30d < 2",pass:u.apds_first_30d<2,val:u.apds_first_30d},
-      {lbl:"deposits_first_30d < 2",pass:u.deposits_first_30d<2,val:u.deposits_first_30d}
-    ]},
-    {stage:"Early Life Lapsed",hit:u.account_age_days>=31&&u.account_age_days<=90&&!(u.apds_first_90d>=2&&u.deposits_first_90d>=2),conds:[
-      {lbl:"account_age_days 31–90",pass:u.account_age_days>=31&&u.account_age_days<=90,val:u.account_age_days},
-      {lbl:"NOT (apds_first_90d>=2 AND deposits_first_90d>=2)",pass:!(u.apds_first_90d>=2&&u.deposits_first_90d>=2),val:"apds="+u.apds_first_90d+", deps="+u.deposits_first_90d}
-    ]},
-    {stage:"Early Life Lost",hit:u.account_age_days>90&&!(u.total_apds_lifetime>=2&&u.total_deposits_lifetime>=2),conds:[
-      {lbl:"account_age_days > 90",pass:u.account_age_days>90,val:u.account_age_days},
-      {lbl:"NOT (total_apds>=2 AND total_deps>=2)",pass:!(u.total_apds_lifetime>=2&&u.total_deposits_lifetime>=2),val:"apds="+u.total_apds_lifetime+", deps="+u.total_deposits_lifetime}
-    ]}
+    { stage:"Early Life",
+      hit: lowApdOrDep && age <= 30,
+      conds:[
+        {lbl:"total_apds < 2 OR total_deps < 2", pass:lowApdOrDep,  val:"apds="+tot_apds+", deps="+tot_deps},
+        {lbl:"account_age_days <= 30",            pass:age <= 30,    val:age}
+      ]},
+    { stage:"In Life",
+      hit: highApdAndDep && la30,
+      conds:[
+        {lbl:"total_apds_lifetime >= 2",          pass:tot_apds>=2,  val:tot_apds},
+        {lbl:"total_deposits_lifetime >= 2",      pass:tot_deps>=2,  val:tot_deps},
+        {lbl:"last_apd_date >= today-30",         pass:la30,         val:laStr}
+      ]},
+    { stage:"Reactivated",
+      hit: lowApdOrDep && age > 30 && la30,
+      conds:[
+        {lbl:"total_apds < 2 OR total_deps < 2",  pass:lowApdOrDep,  val:"apds="+tot_apds+", deps="+tot_deps},
+        {lbl:"account_age_days > 30",             pass:age > 30,     val:age},
+        {lbl:"last_apd_date >= today-30",         pass:la30,         val:laStr}
+      ]},
+    { stage:"In Life Lapsed",
+      hit: highApdAndDep && la30_180,
+      conds:[
+        {lbl:"total_apds_lifetime >= 2",          pass:tot_apds>=2,  val:tot_apds},
+        {lbl:"total_deposits_lifetime >= 2",      pass:tot_deps>=2,  val:tot_deps},
+        {lbl:"last_apd between today-180 & -30",  pass:la30_180,     val:laStr}
+      ]},
+    { stage:"Lost",
+      hit: highApdAndDep && la180,
+      conds:[
+        {lbl:"total_apds_lifetime >= 2",          pass:tot_apds>=2,  val:tot_apds},
+        {lbl:"total_deposits_lifetime >= 2",      pass:tot_deps>=2,  val:tot_deps},
+        {lbl:"last_apd_date < today-180",         pass:la180,        val:laStr}
+      ]},
+    { stage:"Early Life Lost",
+      hit: lowApdOrDep && (age > 90 || la90),
+      conds:[
+        {lbl:"total_apds < 2 OR total_deps < 2",  pass:lowApdOrDep,        val:"apds="+tot_apds+", deps="+tot_deps},
+        {lbl:"age > 90 OR last_apd < today-90",   pass:age>90||la90,       val:"age="+age+", last_apd="+laStr}
+      ]},
+    { stage:"Early Life Lapsed",
+      hit: lowApdOrDep && (age > 30 || la30x),
+      conds:[
+        {lbl:"total_apds < 2 OR total_deps < 2",  pass:lowApdOrDep,        val:"apds="+tot_apds+", deps="+tot_deps},
+        {lbl:"age > 30 OR last_apd < today-30",   pass:age>30||la30x,      val:"age="+age+", last_apd="+laStr}
+      ]}
   ];
 }
 
-function mkBadge(stage){
-  var c=COLORS[stage]||"#6b7280";
+function mkBadge(stage) {
+  var c = COLORS[stage] || "#6b7280";
   return '<span class="badge" style="color:'+c+';border-color:'+c+'33;background:'+c+'15">'+stage+'</span>';
 }
 
 var allData=[], currentFilter="all", selectedId=null, searchQuery="", currentPage=1, PAGE=100;
 
 function getFiltered(){
-  var f=currentFilter==="all"?allData:allData.filter(function(u){return u.life_stage===currentFilter;});
-  if(searchQuery) f=f.filter(function(u){return String(u.user_id).toLowerCase().includes(searchQuery);});
+  var f = currentFilter==="all" ? allData : allData.filter(function(u){return u.life_stage===currentFilter;});
+  if(searchQuery) f = f.filter(function(u){return String(u.user_id).toLowerCase().includes(searchQuery);});
   return f;
 }
 
 function renderPills(){
   var dist={};
   allData.forEach(function(u){dist[u.life_stage]=(dist[u.life_stage]||0)+1;});
+  var order=["In Life","Reactivated","In Life Lapsed","Lost","Early Life","Early Life Lapsed","Early Life Lost","unknown"];
   var html="";
-  Object.keys(dist).sort(function(a,b){return dist[b]-dist[a];}).forEach(function(s){
-    var c=COLORS[s]||"#6b7280",n=dist[s],active=currentFilter===s;
+  order.forEach(function(s){
+    if(!dist[s]) return;
+    var c=COLORS[s]||"#6b7280", n=dist[s], active=currentFilter===s;
     html+='<div class="pill" data-stage="'+s+'" style="border-color:'+c+';color:'+(active?"#fff":c)+';background:'+(active?c:c+"15")+'">'+s+' <strong>'+n+'</strong></div>';
   });
   var allA=currentFilter==="all";
-  html+='<div class="pill" data-stage="all" style="border-color:var(--border2);color:var(--text2);background:'+(allA?"var(--bg3)":"transparent")+'">All '+allData.length+'</div>';
+  html+='<div class="pill" data-stage="all" style="border-color:var(--border2);color:var(--text2);background:'+(allA?"var(--bg3)":"transparent")+'">All <strong>'+allData.length+'</strong></div>';
   var el=document.getElementById("pills");
   el.innerHTML=html;
   el.querySelectorAll(".pill").forEach(function(p){
@@ -258,17 +341,28 @@ function renderTable(){
   page.forEach(function(u){
     var sid=String(u.user_id);
     var sel=sid===selectedId?"sel":"";
+    var age=+(u.account_age_days||0);
+    var ta=+(u.total_apds_lifetime||0), a90=+(u.apds_last_90d||0), a9180=+(u.apds_90_180d||0), a180=+(u.apds_180d_plus||0), af30=+(u.apds_first_30d||0), af90=+(u.apds_first_90d||0);
+    var td=+(u.total_deposits_lifetime||0), d90=+(u.deposits_last_90d||0), d9180=+(u.deposits_90_180d||0), d180=+(u.deposits_180d_plus||0), df30=+(u.deposits_first_30d||0), df90=+(u.deposits_first_90d||0);
+    var lastApd=parseDate(u.last_apd_date);
+    var la30=lastApd&&lastApd>=daysAgo(30);
+    var laShort=u.last_apd_date?String(u.last_apd_date).substring(0,10):'—';
     html+='<tr class="'+sel+'" data-uid="'+sid+'">'+
       '<td class="uid">'+u.user_id+'</td>'+
-      '<td>'+u.account_age_days+'</td>'+
-      '<td class="'+(u.apds_last_90d>=2?"p":"f")+'">'+u.apds_last_90d+'</td>'+
-      '<td class="'+(u.apds_90_180d>=2?"p":"f")+'">'+u.apds_90_180d+'</td>'+
-      '<td class="'+(u.apds_180d_plus>=2?"p":"f")+'">'+u.apds_180d_plus+'</td>'+
-      '<td class="'+(u.deposits_last_90d>=2?"p":"f")+'">'+u.deposits_last_90d+'</td>'+
-      '<td class="'+(u.deposits_90_180d>=2?"p":"f")+'">'+u.deposits_90_180d+'</td>'+
-      '<td class="'+(u.deposits_180d_plus>=2?"p":"f")+'">'+u.deposits_180d_plus+'</td>'+
-      '<td class="'+(u.total_apds_lifetime>=2?"p":"f")+'">'+u.total_apds_lifetime+'</td>'+
-      '<td class="'+(u.total_deposits_lifetime>=2?"p":"f")+'">'+u.total_deposits_lifetime+'</td>'+
+      '<td>'+age+'</td>'+
+      '<td class="'+(ta>=2?"p":"f")+'">'+ta+'</td>'+
+      '<td class="'+(a90>=1?"p":"f")+'">'+a90+'</td>'+
+      '<td class="'+(a9180>=2?"p":"f")+'">'+a9180+'</td>'+
+      '<td class="'+(a180>=2?"p":"f")+'">'+a180+'</td>'+
+      '<td class="'+(af30>=2?"p":"f")+'">'+af30+'</td>'+
+      '<td class="'+(af90>=2?"p":"f")+'">'+af90+'</td>'+
+      '<td class="'+(td>=2?"p":"f")+'">'+td+'</td>'+
+      '<td class="'+(d90>=1?"p":"f")+'">'+d90+'</td>'+
+      '<td class="'+(d9180>=2?"p":"f")+'">'+d9180+'</td>'+
+      '<td class="'+(d180>=2?"p":"f")+'">'+d180+'</td>'+
+      '<td class="'+(df30>=2?"p":"f")+'">'+df30+'</td>'+
+      '<td class="'+(df90>=2?"p":"f")+'">'+df90+'</td>'+
+      '<td class="'+(la30?"p":"f")+'">'+laShort+'</td>'+
       '<td class="l">'+mkBadge(u.life_stage)+'</td></tr>';
   });
 
@@ -300,7 +394,6 @@ function renderDetail(){
   var panel=document.getElementById("detail");
   var layout=document.getElementById("layout");
   if(!selectedId){panel.classList.remove("visible");panel.style.display="none";layout.classList.remove("with-panel");return;}
-
   var u=null;
   for(var i=0;i<allData.length;i++){if(String(allData[i].user_id)===selectedId){u=allData[i];break;}}
   if(!u){panel.classList.remove("visible");panel.style.display="none";layout.classList.remove("with-panel");return;}
@@ -310,10 +403,18 @@ function renderDetail(){
   layout.classList.add("with-panel");
 
   var checks=getChecks(u);
+  var lastApd=parseDate(u.last_apd_date);
+  var daysLastApd=lastApd?daysBetween(lastApd,TODAY):null;
+
   var html='<button class="close-btn" onclick="closeDetail()">✕ close</button>'+
     '<div class="d-uid">'+u.user_id+'</div>'+
     '<div class="d-stage">'+mkBadge(u.life_stage)+'</div>'+
-    '<div class="d-meta">Account age: <strong>'+u.account_age_days+' days</strong>'+(u.account_open_date?'<br>Opened: '+u.account_open_date:'')+'</div>'+
+    '<div class="d-meta">'+
+      'Account age: <strong>'+(u.account_age_days||0)+' days</strong>'+
+      (u.account_open_date?'<br>Opened: <strong>'+u.account_open_date+'</strong>':'')+
+      (u.last_apd_date?'<br>Last APD: <strong>'+u.last_apd_date+'</strong>'+(daysLastApd!==null?' <span style="color:var(--text3);">('+daysLastApd+'d ago)</span>':''):'<br>Last APD: <strong style="color:#dc2626">none</strong>')+
+      (u.last_deposit_date?'<br>Last deposit: <strong>'+u.last_deposit_date+'</strong>':'')+
+    '</div>'+
     '<div class="sec-lbl">Stage conditions</div>';
 
   checks.forEach(function(item){
@@ -332,22 +433,16 @@ function renderDetail(){
     });
     html+='</div>';
   });
-
   panel.innerHTML=html;
 }
 
-function closeDetail(){
-  selectedId=null;
-  renderTable();
-  renderDetail();
-}
-
+function closeDetail(){selectedId=null;renderTable();renderDetail();}
 function renderAll(){renderPills();renderTable();renderDetail();}
 
 function onSearch(){
   searchQuery=document.getElementById("search").value.trim().toLowerCase();
   document.getElementById("search-clear").style.display=searchQuery?"block":"none";
-  if(searchQuery){currentFilter="all";}
+  if(searchQuery)currentFilter="all";
   selectedId=null;currentPage=1;
   renderAll();
 }
@@ -362,7 +457,7 @@ function clearSearch(){
 function loadFile(file){
   Papa.parse(file,{header:true,dynamicTyping:true,skipEmptyLines:true,complete:function(r){
     allData=r.data.map(function(row){
-      if(!row.life_stage) row.life_stage=classify(row);
+      if(!row.life_stage||row.life_stage==='') row.life_stage=classify(row);
       return row;
     });
     currentFilter="all";selectedId=null;currentPage=1;
